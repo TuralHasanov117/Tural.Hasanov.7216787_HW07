@@ -25,11 +25,17 @@ def get_choice(choice_id: int):
 
 class QuestionModelTest(TestCase):
     def test_get_absolute_url(self):
+        """
+        Question absolute url should be equal to its detail url
+        """
         question = create_question("Question", -12)
         question = Question.objects.get(id=question.id)
         self.assertEqual(question.get_absolute_url(), '/1/')
 
     def test_str_property_equal_to_question_text(self):
+        """
+        Question model str method returns its question_text
+        """
         question = create_question("Question", -12)
         question = Question.objects.get(id=question.id)
         self.assertEqual(str(question), question.question_text)
@@ -47,7 +53,7 @@ class QuestionIndexViewTests(TestCase):
 
     def test_get_questions(self):
         """
-        If no questions exist, an appropriate message is displayed.
+        Get questions ordered by publish date
         """
         question1 = create_question("Question 1", -12)
         question2 = create_question("Question 2", -10)
@@ -101,8 +107,9 @@ class QuestionDetailViewTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_gets_question(self):
+    def test_get_question(self):
         """
+        Get single question by id
         """
         question = create_question(question_text='Question.', days=-5)
         url = reverse('polls:detail', args=(question.id,))
@@ -124,6 +131,7 @@ class QuestionVoteViewTests(TestCase):
 
     def test_question_vote_redirects_to_results_page(self):
         """
+        The vote view redirects to the results page after successful voting
         """
         question = create_question(question_text="Question.", days=-30)
         choice1 = create_choice(choice_text="Choice 1", question=question)
@@ -133,6 +141,7 @@ class QuestionVoteViewTests(TestCase):
 
     def test_question_choice_votes_is_zero_initially(self):
         """
+        The votes count is zero when choice is created
         """
         question = create_question(question_text="Question.", days=-30)
         choice1 = create_choice(choice_text="Choice 1", question=question)
@@ -140,6 +149,7 @@ class QuestionVoteViewTests(TestCase):
 
     def test_question_choice_votes_increases_after_vote(self):
         """
+        The votes count is increased by 1 after successful voting
         """
         question = create_question(question_text="Question.", days=-30)
         choice1 = create_choice(choice_text="Choice 1", question=question)
@@ -174,6 +184,9 @@ class QuestionResultsViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_question_with_choices_loaded_in_results_page(self):
+        """
+        Load choices of questions in results page
+        """
         question = create_question(question_text="Question.", days=-30)
         choice1 = create_choice(choice_text="Choice 1", question=question)
         choice2 = create_choice(choice_text="Choice 2", question=question)
